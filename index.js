@@ -163,7 +163,7 @@ const defaultMobileNetInternalResolution = 'low';
 
 
 const guiState = {
-  algorithm: 'person',
+  algorithm: 'multi-person-instance',
   estimate: 'segmentation',
   camera: null,
   flipHorizontal: true,
