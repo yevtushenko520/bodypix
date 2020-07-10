@@ -160,7 +160,7 @@ const defaultResNetInternalResolution = 'low';
 
 const guiState = {
   algorithm: 'multi-person-instance',
-  estimate: 'partmap',
+  estimate: 'segmentation',
   camera: null,
   flipHorizontal: true,
   input: {
