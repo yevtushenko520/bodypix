@@ -149,16 +149,16 @@ const defaultResNetStride = 16;
 const defaultResNetInternalResolution = 'low';
 
 const guiState = {
-  algorithm: 'multi-person-instance',
+  algorithm: 'person',
   estimate: 'segmentation',
   camera: 'Камера на задней панели',
   flipHorizontal: false,
   input: {
     architecture: 'MobileNetV1',
     outputStride: 16,
-    internalResolution: 'low',
-    multiplier: 0.50,
-    quantBytes: 1
+    internalResolution: 'medium',
+    multiplier: 0.75,
+    quantBytes: 4
   },
   multiPersonDecoding: {
     maxDetections: 5,
