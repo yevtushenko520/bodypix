@@ -14,13 +14,16 @@
  * limitations under the License.
  * =============================================================================
  */
-//import * as bodyPix from '@tensorflow-models/body-pix';
-//import dat from 'dat.gui';
-//import Stats from 'stats.js';
 
-//import {drawKeypoints, drawSkeleton, toggleLoadingUI, TRY_RESNET_BUTTON_NAME, TRY_RESNET_BUTTON_TEXT, updateTryResNetButtonDatGuiCss} from './demo_util';
-//import * as partColorScales from './part_color_scales';
+ /*
+import * as bodyPix from '@tensorflow-models/body-pix';
+import dat from 'dat.gui';
+import Stats from 'stats.js';
 
+import {drawKeypoints, drawSkeleton, toggleLoadingUI, TRY_RESNET_BUTTON_NAME, TRY_RESNET_BUTTON_TEXT, updateTryResNetButtonDatGuiCss} from './demo_util';
+import * as partColorScales from './part_color_scales';
+
+*/
 
 //const stats = new Stats();
 
@@ -115,7 +118,6 @@ async function getConstraints(cameraLabel) {
  *
  */
 async function setupCamera(cameraLabel) {
-  
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     throw new Error(
         'Browser API navigator.mediaDevices.getUserMedia not available');
@@ -154,16 +156,18 @@ async function loadVideo(cameraLabel) {
   state.video.play();
 }
 
-const defaultQuantBytes = 4;
+const defaultQuantBytes = 2;
 
 const defaultMobileNetMultiplier = isMobile() ? 0.50 : 0.75;
 const defaultMobileNetStride = 16;
 const defaultMobileNetInternalResolution = 'low';
 
-
+const defaultResNetMultiplier = 1.0;
+const defaultResNetStride = 16;
+const defaultResNetInternalResolution = 'low';
 
 const guiState = {
-  algorithm: 'person',
+  algorithm: 'multi-person-instance',
   estimate: 'segmentation',
   camera: null,
   flipHorizontal: true,
@@ -171,7 +175,7 @@ const guiState = {
     architecture: 'MobileNetV1',
     outputStride: 16,
     internalResolution: 'low',
-    multiplier: 0.75,
+    multiplier: 0.50,
     quantBytes: 2
   },
   multiPersonDecoding: {
@@ -452,9 +456,9 @@ function setupGui(cameras) {
   partMap.add(guiState.partMap, 'opacity', 0.0, 1.0);
   partMap.add(guiState.partMap, 'colorScale', Object.keys(partColorScales))
       .onChange(colorScale => {
-      //  setShownPartColorScales(colorScale);
+        setShownPartColorScales(colorScale);
       });
-  //setShownPartColorScales(guiState.partMap.colorScale);
+  setShownPartColorScales(guiState.partMap.colorScale);
   partMap.add(guiState.partMap, 'blurBodyPartAmount').min(1).max(20).step(1);
   partMap.add(guiState.partMap, 'bodyPartEdgeBlurAmount')
       .min(1)
@@ -483,9 +487,6 @@ function setupGui(cameras) {
   })
 }
 
-
-
-/*
 function setShownPartColorScales(colorScale) {
   const colors = document.getElementById('colors');
   colors.innerHTML = '';
@@ -505,7 +506,6 @@ function setShownPartColorScales(colorScale) {
     colors.appendChild(child);
   }
 }
-*/
 
 /**
  * Sets up a frames per second panel on the top-left of the window
@@ -595,7 +595,7 @@ function drawPoses(personOrPersonPartSegmentation, flipHorizontally, ctx) {
 }
 
 async function loadBodyPix() {
- // toggleLoadingUI(true);
+  //toggleLoadingUI(true);
   state.net = await bodyPix.load({
     architecture: guiState.input.architecture,
     outputStride: guiState.input.outputStride,
@@ -613,9 +613,6 @@ function segmentBodyInRealTime() {
   const canvas = document.getElementById('output');
   // since images are being fed from a webcam
 
-  canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
   async function bodySegmentationFrame() {
     // if changing the model or the camera, wait a second for it to complete
     // then try again.
@@ -631,7 +628,7 @@ canvas.height = window.innerHeight;
     }
 
     // Begin monitoring code for frames per second
- //   stats.begin();
+   // stats.begin();
 
     const flipHorizontally = guiState.flipHorizontal;
 
@@ -690,14 +687,14 @@ canvas.height = window.innerHeight;
                 blurBodyPartIds, guiState.partMap.blurBodyPartAmount,
                 guiState.partMap.edgeBlurAmount, flipHorizontally);
         }
-       // drawPoses(multiPersonPartSegmentation, flipHorizontally, ctx);
+        drawPoses(multiPersonPartSegmentation, flipHorizontally, ctx);
         break;
       default:
         break;
     }
 
     // End monitoring code for frames per second
-    //stats.end();
+  //  stats.end();
 
     requestAnimationFrame(bodySegmentationFrame);
   }
@@ -716,9 +713,9 @@ canvas.height = window.innerHeight;
 
   await loadVideo(guiState.camera);
 
-  let cameras = await getVideoInputs();
+ // let cameras = await getVideoInputs();
 
- // setupFPS();
+  //setupFPS();
   //setupGui(cameras);
 
   segmentBodyInRealTime();
