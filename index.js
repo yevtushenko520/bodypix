@@ -642,7 +642,7 @@ canvas.height = window.innerHeight;
           case 'mask':
             const ctx = canvas.getContext('2d');
             const foregroundColor = {r: 255, g: 255, b: 255, a: 0};
-            const backgroundColor = {r: 0, g: 0, b: 0, a: 255};
+            const backgroundColor = {r: 255, g: 255, b: 255, a: 255};
             const mask = bodyPix.toMask(
                 multiPersonSegmentation, foregroundColor, backgroundColor,
                 true);
