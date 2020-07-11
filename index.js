@@ -164,16 +164,16 @@ const defaultMobileNetInternalResolution = 'low';
 
 
 const guiState = {
-  algorithm: 'person',
+  algorithm: 'multi-person-instance',
   estimate: 'segmentation',
   camera: null,
   flipHorizontal: true,
   input: {
     architecture: 'MobileNetV1',
     outputStride: 16,
-    internalResolution: 'medium',
-    multiplier: 0.75,
-    quantBytes: 4
+    internalResolution: 'low',
+    multiplier: 0.50,
+    quantBytes: 1
   },
   multiPersonDecoding: {
     maxDetections: 1,
