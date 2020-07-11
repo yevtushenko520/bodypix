@@ -150,7 +150,7 @@ const defaultResNetInternalResolution = 'low';
 
 const guiState = {
   algorithm: 'multi-person-instance',
-  estimate: 'partmap',
+  estimate: 'segmentation',
   camera: 'Камера на задней панели',
   flipHorizontal: false,
   input: {
