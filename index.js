@@ -159,7 +159,7 @@ const defaultMobileNetInternalResolution = 'low';
 const guiState = {
   algorithm: 'multi-person-instance',
   estimate: 'segmentation',
-  camera: null,
+  camera: 'Камера на задней панели',
   flipHorizontal: true,
   input: {
     architecture: 'MobileNetV1',
