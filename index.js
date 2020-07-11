@@ -91,14 +91,7 @@ async function getDeviceIdForLabel(cameraLabel) {
 // Here we use the camera label to determine if its the environment or
 // user facing camera
 function getFacingMode(cameraLabel) {
-  if (!cameraLabel) {
-    return 'environment';
-  }
-  if (cameraLabel.toLowerCase().includes('back')) {
-    return 'environment';
-  } else {
-    return 'environment';
-  }
+  return 'environment';
 }
 
 async function getConstraints(cameraLabel) {
