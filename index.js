@@ -166,7 +166,7 @@ const guiState = {
     outputStride: 16,
     internalResolution: 'medium',
     multiplier: 0.75,
-    quantBytes: 1
+    quantBytes: 4
   },
   multiPersonDecoding: {
     maxDetections: 1,
