@@ -164,7 +164,7 @@ const guiState = {
   input: {
     architecture: 'MobileNetV1',
     outputStride: 16,
-    internalResolution: 'low',
+    internalResolution: 'medium',
     multiplier: 0.75,
     quantBytes: 1
   },
