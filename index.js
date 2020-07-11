@@ -92,12 +92,12 @@ async function getDeviceIdForLabel(cameraLabel) {
 // user facing camera
 function getFacingMode(cameraLabel) {
   if (!cameraLabel) {
-    return 'user';
+    return 'environment';
   }
   if (cameraLabel.toLowerCase().includes('back')) {
     return 'environment';
   } else {
-    return 'user';
+    return 'environment';
   }
 }
 
