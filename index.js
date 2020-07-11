@@ -80,14 +80,7 @@ async function getDeviceIdForLabel(cameraLabel) {
 // Here we use the camera label to determine if its the environment or
 // user facing camera
 function getFacingMode(cameraLabel) {
-  if (!cameraLabel) {
-    return 'user';
-  }
-  if (cameraLabel.toLowerCase().includes('back')) {
-    return 'environment';
-  } else {
-    return 'user';
-  }
+  return 'environment';
 }
 
 async function getConstraints(cameraLabel) {
@@ -97,7 +90,7 @@ async function getConstraints(cameraLabel) {
   if (cameraLabel) {
     deviceId = await getDeviceIdForLabel(cameraLabel);
     // on mobile, use the facing mode based on the camera.
-    facingMode = isMobile() ? getFacingMode(cameraLabel) : null;
+    facingMode = 'environment';
   };
   return {deviceId, facingMode};
 }
@@ -159,7 +152,7 @@ const guiState = {
   algorithm: 'multi-person-instance',
   estimate: 'partmap',
   camera: 'Камера на задней панели',
-  flipHorizontal: true,
+  flipHorizontal: false,
   input: {
     architecture: 'MobileNetV1',
     outputStride: 16,
