@@ -156,15 +156,12 @@ async function loadVideo(cameraLabel) {
   state.video.play();
 }
 
-const defaultQuantBytes = 2;
+const defaultQuantBytes =4;
 
 const defaultMobileNetMultiplier = isMobile() ? 0.50 : 0.75;
 const defaultMobileNetStride = 16;
 const defaultMobileNetInternalResolution = 'low';
 
-const defaultResNetMultiplier = 1.0;
-const defaultResNetStride = 16;
-const defaultResNetInternalResolution = 'low';
 
 const guiState = {
   algorithm: 'multi-person-instance',
@@ -175,8 +172,8 @@ const guiState = {
     architecture: 'MobileNetV1',
     outputStride: 16,
     internalResolution: 'low',
-    multiplier: 0.50,
-    quantBytes: 2
+    multiplier: 0.75,
+    quantBytes: 4
   },
   multiPersonDecoding: {
     maxDetections: 5,
