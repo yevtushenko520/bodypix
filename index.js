@@ -160,7 +160,7 @@ const guiState = {
   algorithm: 'multi-person-instance',
   estimate: 'segmentation',
   camera: 'Камера на задней панели',
-  flipHorizontal: true,
+  flipHorizontal: false,
   input: {
     architecture: 'MobileNetV1',
     outputStride: 16,
