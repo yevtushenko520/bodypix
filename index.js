@@ -15,17 +15,6 @@
  * =============================================================================
  */
 
- /*
-import * as bodyPix from '@tensorflow-models/body-pix';
-import dat from 'dat.gui';
-import Stats from 'stats.js';
-
-import {drawKeypoints, drawSkeleton, toggleLoadingUI, TRY_RESNET_BUTTON_NAME, TRY_RESNET_BUTTON_TEXT, updateTryResNetButtonDatGuiCss} from './demo_util';
-import * as partColorScales from './part_color_scales';
-
-*/
-
-//const stats = new Stats();
 
 const state = {
   video: null,
@@ -91,7 +80,14 @@ async function getDeviceIdForLabel(cameraLabel) {
 // Here we use the camera label to determine if its the environment or
 // user facing camera
 function getFacingMode(cameraLabel) {
-  return 'environment';
+  if (!cameraLabel) {
+    return 'user';
+  }
+  if (cameraLabel.toLowerCase().includes('back')) {
+    return 'environment';
+  } else {
+    return 'user';
+  }
 }
 
 async function getConstraints(cameraLabel) {
@@ -101,7 +97,7 @@ async function getConstraints(cameraLabel) {
   if (cameraLabel) {
     deviceId = await getDeviceIdForLabel(cameraLabel);
     // on mobile, use the facing mode based on the camera.
-    facingMode = 'environment';
+    facingMode = isMobile() ? getFacingMode(cameraLabel) : null;
   };
   return {deviceId, facingMode};
 }
@@ -149,18 +145,21 @@ async function loadVideo(cameraLabel) {
   state.video.play();
 }
 
-const defaultQuantBytes =4;
+const defaultQuantBytes = 2;
 
 const defaultMobileNetMultiplier = isMobile() ? 0.50 : 0.75;
 const defaultMobileNetStride = 16;
-const defaultMobileNetInternalResolution = 'low';
+const defaultMobileNetInternalResolution = 'medium';
 
+const defaultResNetMultiplier = 1.0;
+const defaultResNetStride = 16;
+const defaultResNetInternalResolution = 'low';
 
 const guiState = {
   algorithm: 'multi-person-instance',
-  estimate: 'segmentation',
+  estimate: 'partmap',
   camera: 'Камера на задней панели',
-  flipHorizontal: false,
+  flipHorizontal: true,
   input: {
     architecture: 'MobileNetV1',
     outputStride: 16,
@@ -169,8 +168,8 @@ const guiState = {
     quantBytes: 4
   },
   multiPersonDecoding: {
-    maxDetections: 1,
-    scoreThreshold: 0.4,
+    maxDetections: 5,
+    scoreThreshold: 0.3,
     nmsRadius: 20,
     numKeypointForMatching: 17,
     refineSteps: 10
@@ -179,7 +178,7 @@ const guiState = {
     segmentationThreshold: 0.7,
     effect: 'mask',
     maskBackground: true,
-    opacity: 1,
+    opacity: 0.7,
     backgroundBlurAmount: 3,
     maskBlurAmount: 0,
     edgeBlurAmount: 3
@@ -538,7 +537,7 @@ async function estimateSegmentation() {
 async function estimatePartSegmentation() {
   switch (guiState.algorithm) {
     case 'multi-person-instance':
-      return await state.net.segmentMultiPerson(state.video, {
+      return await state.net.segmentMultiPersonParts(state.video, {
         internalResolution: guiState.input.internalResolution,
         segmentationThreshold: guiState.segmentation.segmentationThreshold,
         maxDetections: guiState.multiPersonDecoding.maxDetections,
@@ -628,8 +627,8 @@ function segmentBodyInRealTime() {
         switch (guiState.segmentation.effect) {
           case 'mask':
             const ctx = canvas.getContext('2d');
-            const foregroundColor = {r: 255, g: 255, b: 255, a: 0};
-            const backgroundColor = {r: 255, g: 255, b: 255, a: 255};
+            const foregroundColor = {r: 255, g: 255, b: 255, a: 255};
+            const backgroundColor = {r: 0, g: 0, b: 0, a: 255};
             const mask = bodyPix.toMask(
                 multiPersonSegmentation, foregroundColor, backgroundColor,
                 true);
@@ -637,7 +636,7 @@ function segmentBodyInRealTime() {
             bodyPix.drawMask(
                 canvas, state.video, mask, guiState.segmentation.opacity,
                 guiState.segmentation.maskBlurAmount, flipHorizontally);
-           // drawPoses(multiPersonSegmentation, flipHorizontally, ctx);
+            //drawPoses(multiPersonSegmentation, flipHorizontally, ctx);
             break;
           case 'bokeh':
             bodyPix.drawBokehEffect(
@@ -652,8 +651,8 @@ function segmentBodyInRealTime() {
         const ctx = canvas.getContext('2d');
         const multiPersonPartSegmentation = await estimatePartSegmentation();
         const coloredPartImageData = bodyPix.toColoredPartMask(
-            multiPersonPartSegmentation,
-            partColorScales[guiState.partMap.colorScale]);
+            multiPersonPartSegmentation)
+          //  partColorScales[guiState.partMap.colorScale]);
 
         const maskBlurAmount = 0;
         switch (guiState.partMap.effect) {
@@ -677,14 +676,14 @@ function segmentBodyInRealTime() {
                 blurBodyPartIds, guiState.partMap.blurBodyPartAmount,
                 guiState.partMap.edgeBlurAmount, flipHorizontally);
         }
-        drawPoses(multiPersonPartSegmentation, flipHorizontally, ctx);
+       // drawPoses(multiPersonPartSegmentation, flipHorizontally, ctx);
         break;
       default:
         break;
     }
 
     // End monitoring code for frames per second
-  //  stats.end();
+   // stats.end();
 
     requestAnimationFrame(bodySegmentationFrame);
   }
@@ -695,7 +694,7 @@ function segmentBodyInRealTime() {
 /**
  * Kicks off the demo.
  */
- async function bindPage() {
+async function bindPage() {
   // Load the BodyPix model weights with architecture 0.75
   await loadBodyPix();
   document.getElementById('loading').style.display = 'none';
@@ -703,7 +702,7 @@ function segmentBodyInRealTime() {
 
   await loadVideo(guiState.camera);
 
- // let cameras = await getVideoInputs();
+  let cameras = await getVideoInputs();
 
   //setupFPS();
   //setupGui(cameras);
