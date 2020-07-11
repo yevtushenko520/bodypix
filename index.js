@@ -172,7 +172,7 @@ const guiState = {
     architecture: 'MobileNetV1',
     outputStride: 16,
     internalResolution: 'low',
-    multiplier: 0.50,
+    multiplier: 0.75,
     quantBytes: 1
   },
   multiPersonDecoding: {
