@@ -176,8 +176,8 @@ const guiState = {
     quantBytes: 4
   },
   multiPersonDecoding: {
-    maxDetections: 5,
-    scoreThreshold: 0.3,
+    maxDetections: 1,
+    scoreThreshold: 0.4,
     nmsRadius: 20,
     numKeypointForMatching: 17,
     refineSteps: 10
@@ -529,7 +529,7 @@ async function estimateSegmentation() {
         refineSteps: guiState.multiPersonDecoding.refineSteps
       });
     case 'person':
-      return await state.net.segmentMultiPerson(state.video, {
+      return await state.net.segmentPerson(state.video, {
         internalResolution: guiState.input.internalResolution,
         segmentationThreshold: guiState.segmentation.segmentationThreshold,
         maxDetections: guiState.multiPersonDecoding.maxDetections,
