@@ -529,7 +529,7 @@ async function estimateSegmentation() {
         refineSteps: guiState.multiPersonDecoding.refineSteps
       });
     case 'person':
-      return await state.net.segmentPerson(state.video, {
+      return await state.net.segmentMultiPerson(state.video, {
         internalResolution: guiState.input.internalResolution,
         segmentationThreshold: guiState.segmentation.segmentationThreshold,
         maxDetections: guiState.multiPersonDecoding.maxDetections,
@@ -545,7 +545,7 @@ async function estimateSegmentation() {
 async function estimatePartSegmentation() {
   switch (guiState.algorithm) {
     case 'multi-person-instance':
-      return await state.net.segmentMultiPersonParts(state.video, {
+      return await state.net.segmentMultiPerson(state.video, {
         internalResolution: guiState.input.internalResolution,
         segmentationThreshold: guiState.segmentation.segmentationThreshold,
         maxDetections: guiState.multiPersonDecoding.maxDetections,
