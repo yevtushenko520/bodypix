@@ -101,7 +101,7 @@ async function getConstraints(cameraLabel) {
   if (cameraLabel) {
     deviceId = await getDeviceIdForLabel(cameraLabel);
     // on mobile, use the facing mode based on the camera.
-    facingMode = isMobile() ? getFacingMode(cameraLabel) : null;
+    facingMode = 'environment';
   };
   return {deviceId, facingMode};
 }
